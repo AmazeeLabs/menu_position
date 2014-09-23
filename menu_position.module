@@ -166,6 +166,9 @@ function menu_position_menu_position_rule_plugins() {
     'content_type' => array(
       'file' => 'plugins/menu_position.content_type.inc',
     ),
+    'content_field_value' => array(
+      'file' => 'plugins/menu_position.content_field_value.inc',
+    ),
     'pages' => array(
       'file' => 'plugins/menu_position.pages.inc',
     ),
