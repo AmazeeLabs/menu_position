@@ -15,19 +15,23 @@
  */
 function menu_position_menu_position_condition_content_field_value($variables) {
   // Check if this is a node page and that the specified field matches the value.
-  $node_wrapper = entity_metadata_wrapper('node', $variables['context']['node']);
+  if(isset($variables['context']['node'])) {
 
-  if (!isset($node_wrapper->{$variables['content_field_name']}))
-    return FALSE;
+    $node_wrapper = entity_metadata_wrapper('node', $variables['context']['node']);
 
-  // Get the valule of content_field
-  $field_value = $node_wrapper->{$variables['content_field_name']}->value(array('identifier' => 'TRUE'));
+    if (!isset($node_wrapper->{$variables['content_field_name']})) {
+      return FALSE;
+    }
 
-  // Check if the value is a boolean type
-  if (is_bool($field_value))
-    $field_value = ($field_value) ? '1' : '0';
+    // Get the valule of content_field
+    $field_value = $node_wrapper->{$variables['content_field_name']}->value(array('identifier' => 'TRUE'));
 
-  return ($variables['context']['entity_type'] == 'node' && ($field_value == $variables['content_field_value'])) ? TRUE : FALSE;
+    // Check if the value is a boolean type
+    if (is_bool($field_value))
+      $field_value = ($field_value) ? '1' : '0';
+
+    return ($variables['context']['entity_type'] == 'node' && ($field_value == $variables['content_field_value'])) ? TRUE : FALSE;
+  }
 }
 
 /**
