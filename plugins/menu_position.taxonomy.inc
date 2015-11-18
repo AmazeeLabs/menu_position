@@ -32,7 +32,9 @@ function menu_position_menu_position_condition_taxonomy($variables) {
       $taxonomy_fields = array();
       $field_info = field_info_fields();
       foreach (array_keys(field_info_instances($entity_type, $bundle_name)) as $key) {
-        if ($field_info[$key]['type'] == 'taxonomy_term_reference') {
+        $taxonomy_term_reference = $field_info[$key]['type'] == 'taxonomy_term_reference';
+        $taxonomy_term_entityreference = $field_info[$key]['type'] == 'entityreference' && (!empty($field_info[$key]['foreign keys']['taxonomy_term_data']) || !empty($field_info[$key]['indexes']['target_id']));
+        if ($taxonomy_term_reference || $taxonomy_term_entityreference) {
           $taxonomy_fields[$key] = $field_info[$key]['translatable'];
         }
       }
@@ -44,7 +46,9 @@ function menu_position_menu_position_condition_taxonomy($variables) {
         // Check for matching terms.
         if (!empty($tid)) {
           foreach ($entity->{$field}[$language] as $term) {
-            if (in_array($term['tid'], $tid)) {
+            $taxonomy_term_reference_match = !empty($term['tid']) && in_array($term['tid'], $tid);
+            $taxonomy_term_entityreference_match = !empty($term['target_id']) && in_array($term['target_id'], $tid);
+            if ($taxonomy_term_reference_match || $taxonomy_term_entityreference_match) {
               return TRUE;
             }
           }
